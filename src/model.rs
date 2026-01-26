@@ -50,11 +50,12 @@ where
 {
     let model = String::deserialize(deserializer)?;
     let model = match model.as_str() {
-        "claude-3-haiku" => "claude-3-haiku-20240307",
-        "llama-3.3-70b" => "meta-llama/Llama-3.3-70B-Instruct-Turbo",
-        "mixtral-small-3" => "mistralai/Mistral-Small-24B-Instruct-2501",
         "gpt-4o-mini" => "gpt-4o-mini",
-        "o4-mini" => "o4-mini",
+        "gpt-5-mini" => "gpt-5-mini",
+        "gpt-oss-120b" => "openai/gpt-oss-120b",
+        "llama-4-scout" => "meta-llama/Llama-4-Scout-17B-16E-Instruct",
+        "claude-3.5-haiku" => "claude-3-5-haiku-latest",
+        "mixtral-small-3" => "mistralai/Mistral-Small-24B-Instruct-2501",
         _ => model.as_str(),
     };
     Ok(model.to_owned())

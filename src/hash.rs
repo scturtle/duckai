@@ -184,8 +184,7 @@ pub fn gen_request_hash(hash: &str) -> Result<String> {
             "v": "4",
             "challenge_id": challenge_id,
             "timestamp": timestamp,
-            "origin":"https://duckduckgo.com",
-            "stack":"@https://duckduckgo.com/dist/wpm.chat.8bef2abd792822e606e9.js:1:23932",
+            "origin":"https://duck.ai",
             "duration": "13"
         }
     });

@@ -16,7 +16,7 @@ use axum_extra::{
 };
 use reqwest::{Client, header};
 
-const ORIGIN_API: &str = "https://duckduckgo.com";
+const ORIGIN_API: &str = "https://duck.ai";
 
 pub async fn models(
     State(state): State<AppState>,
@@ -32,28 +32,34 @@ pub async fn models(
             "owned_by": "openai",
         }),
         serde_json::json!({
-            "id": "claude-3-haiku",
-            "object": "model",
-            "created": 1686935002,
-            "owned_by": "claude",
-        }),
-        serde_json::json!({
-            "id": "llama-3.3-70b",
-            "object": "model",
-            "created": 1686935002,
-            "owned_by": "meta-llama",
-        }),
-        serde_json::json!({
-            "id": "o4-mini",
+            "id": "gpt-5-mini",
             "object": "model",
             "created": 1686935002,
             "owned_by": "openai",
         }),
         serde_json::json!({
+            "id": "gpt-oss-120b",
+            "object": "model",
+            "created": 1686935002,
+            "owned_by": "openai",
+        }),
+        serde_json::json!({
+            "id": "llama-4-scout",
+            "object": "model",
+            "created": 1686935002,
+            "owned_by": "meta",
+        }),
+        serde_json::json!({
+            "id": "claude-3.5-haiku",
+            "object": "model",
+            "created": 1686935002,
+            "owned_by": "claude",
+        }),
+        serde_json::json!({
             "id": "mixtral-small-3",
             "object": "model",
             "created": 1686935002,
-            "owned_by": "mistral ai",
+            "owned_by": "mistral",
         }),
     ];
 
@@ -96,7 +102,7 @@ async fn send_request(
 ) -> Result<(String, Response)> {
     // dbg!(&hash);
     let resp = client
-        .post("https://duckduckgo.com/duckchat/v1/chat")
+        .post("https://duck.ai/duckchat/v1/chat")
         .header(header::ACCEPT, "text/event-stream")
         .header(header::ORIGIN, ORIGIN_API)
         .header(header::REFERER, ORIGIN_API)
@@ -125,7 +131,7 @@ async fn send_request(
 
 async fn load_token(client: &Client) -> Result<String> {
     let resp = client
-        .get("https://duckduckgo.com/duckchat/v1/status")
+        .get("https://duck.ai/duckchat/v1/status")
         .header(header::REFERER, ORIGIN_API)
         .header("x-vqd-accept", "1")
         .send()
