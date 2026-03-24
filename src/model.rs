@@ -41,12 +41,34 @@ pub enum Content {
     Vec(Vec<ContentItem>),
 }
 
+/// Unified content item supporting text and two image formats:
+///
+/// - `{"type":"text","text":"..."}`
+/// - `{"type":"image","mimeType":"image/webp","image":"data:image/webp;base64,..."}`
+/// - `{"type":"image_url","image_url":{"url":"data:image/jpeg;base64,..."}}`
 #[derive(Debug, Serialize, Deserialize)]
-pub struct ContentItem {
-    #[serde(rename = "type")]
-    r#type: String,
-    pub text: String,
+#[serde(tag = "type")]
+pub enum ContentItem {
+    #[serde(rename = "text")]
+    Text { text: String },
+
+    #[serde(rename = "image")]
+    Image {
+        #[serde(rename = "mimeType")]
+        mime_type: String,
+        image: String,
+    },
+
+    #[serde(rename = "image_url")]
+    ImageUrl { image_url: ImageUrlContent },
 }
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ImageUrlContent {
+    pub url: String,
+}
+
+// ── deserializers ─────────────────────────────────────────────────────────────
 
 fn deserialize_model<'de, D>(deserializer: D) -> Result<String, D::Error>
 where
@@ -69,18 +91,18 @@ fn deserialize_message<'de, D>(deserializer: D) -> Result<Vec<Message>, D::Error
 where
     D: Deserializer<'de>,
 {
-    let mut message: Vec<Message> = Vec::deserialize(deserializer)?;
-    for message in &mut message {
-        if let Some(role) = message.role.as_mut() {
+    let mut messages: Vec<Message> = Vec::deserialize(deserializer)?;
+    for msg in &mut messages {
+        if let Some(role) = msg.role.as_mut() {
             if matches!(role, Role::System) {
                 *role = Role::User;
             }
         }
     }
-    Ok(message)
+    Ok(messages)
 }
 
-// ==================== Duck APi Response Body ====================
+// ==================== Duck API Response Body ====================
 #[derive(Deserialize)]
 pub struct DuckChatCompletion {
     pub message: Option<String>,
