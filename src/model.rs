@@ -68,6 +68,27 @@ pub struct ImageUrlContent {
     pub url: String,
 }
 
+impl ContentItem {
+    /// If the item is an ImageUrl, converts it to an Image variant.
+    pub fn normalize_image_format(&mut self) {
+        if let ContentItem::ImageUrl { image_url } = self {
+            let url = image_url.url.clone();
+            let mime_type = if url.starts_with("data:") {
+                url.strip_prefix("data:")
+                    .and_then(|s| s.split(';').next())
+                    .unwrap_or("image/webp")
+            } else {
+                "image/webp"
+            }
+            .to_string();
+            *self = ContentItem::Image {
+                mime_type,
+                image: url,
+            };
+        }
+    }
+}
+
 // ── deserializers ─────────────────────────────────────────────────────────────
 
 fn deserialize_model<'de, D>(deserializer: D) -> Result<String, D::Error>

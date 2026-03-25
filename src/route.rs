@@ -1,7 +1,7 @@
 use crate::Result;
 use crate::error::Error::{self, MissingHeader};
 use crate::hash::gen_request_hash;
-use crate::model::ChatRequest;
+use crate::model::{ChatRequest, Content};
 use crate::process::ChatProcess;
 use crate::serve::AppState;
 use axum::{
@@ -90,9 +90,21 @@ pub async fn chat_completions(
         }
     }
     let token = token.ok_or_else(|| Error::BadRequest("cannot get token".to_string()))?;
-    if body.model == "gpt-5-mini" && body.reasoning_effort.is_none() {
+
+    // add default value for reasoning effort
+    if body.reasoning_effort.is_none() {
         body.reasoning_effort = Some("minimal".to_string());
     }
+
+    // fix image format in request
+    for message in &mut body.messages {
+        if let Some(Content::Vec(items)) = &mut message.content {
+            for item in items {
+                item.normalize_image_format();
+            }
+        }
+    }
+
     let (_, response) = send_request(&state.client, token, &body).await?;
     Ok(response)
 }
