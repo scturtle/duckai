@@ -3,7 +3,7 @@ use reqwest::{Client, header};
 use std::time::Duration;
 use typed_builder::TypedBuilder;
 
-pub const USER_AGENT: &str = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.4 Safari/605.1.15";
+pub const USER_AGENT: &str = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36";
 
 #[derive(TypedBuilder, Clone)]
 pub struct HttpConfig {

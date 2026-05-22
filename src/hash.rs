@@ -185,7 +185,8 @@ pub fn gen_request_hash(hash: &str) -> Result<String> {
             "challenge_id": challenge_id,
             "timestamp": timestamp,
             "origin":"https://duck.ai",
-            "duration": "13"
+            "stack": "Error",
+            "duration": "24"
         }
     });
     // dbg!(result_json.to_string());

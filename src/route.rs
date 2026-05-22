@@ -16,8 +16,6 @@ use axum_extra::{
 };
 use reqwest::{Client, header};
 
-const ORIGIN_API: &str = "https://duck.ai";
-
 pub async fn models(
     State(state): State<AppState>,
     bearer: Option<TypedHeader<Authorization<Bearer>>>,
@@ -118,8 +116,8 @@ async fn send_request(
     let resp = client
         .post("https://duck.ai/duckchat/v1/chat")
         .header(header::ACCEPT, "text/event-stream")
-        .header(header::ORIGIN, ORIGIN_API)
-        .header(header::REFERER, ORIGIN_API)
+        .header(header::ORIGIN, "https://duck.ai")
+        .header(header::REFERER, "https://duck.ai/")
         .header("x-vqd-hash-1", hash)
         .json(&body)
         .send()
@@ -146,7 +144,7 @@ async fn send_request(
 async fn load_token(client: &Client) -> Result<String> {
     let resp = client
         .get("https://duck.ai/duckchat/v1/status")
-        .header(header::REFERER, ORIGIN_API)
+        .header(header::REFERER, "https://duck.ai")
         .header("x-vqd-accept", "1")
         .send()
         .await?
