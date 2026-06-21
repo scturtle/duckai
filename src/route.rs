@@ -91,7 +91,7 @@ pub async fn chat_completions(
 
     // add default value for reasoning effort
     if body.reasoning_effort.is_none() {
-        body.reasoning_effort = Some("minimal".to_string());
+        body.reasoning_effort = Some("none".to_string());
     }
 
     // fix image format in request
