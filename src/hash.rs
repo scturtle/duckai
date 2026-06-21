@@ -160,7 +160,7 @@ pub fn gen_request_hash(hash: &str) -> Result<String> {
         return Err(HashError("unknown second client hash"));
     };
 
-    let third_pat = capture(r",0x([^)]+)\)\);}\(\)\)]\)")
+    let third_pat = capture(r",0x([[:alnum:]]+)\)\);}\(\)\)\]\)")
         .ok_or_else(|| HashError("third pattern not found"))?;
     let third_num = get_hex(third_pat);
     let third_hash = compute_sha256_base64(&third_num.to_string());
