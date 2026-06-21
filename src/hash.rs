@@ -156,6 +156,12 @@ pub fn gen_request_hash(hash: &str) -> Result<String> {
             .ok_or_else(|| HashError("extracted number not found"))?;
         let number = get_hex(number_pat);
         compute_sha256_base64(&(number + 4).to_string())
+    } else if decoded_str.contains("getBoundingClientRect") {
+        // dbg!("dom checks");
+        let number_pat = capture(r",0x([[:alnum:]]+)\)\);\}\(\)\),\(function")
+            .ok_or_else(|| HashError("base number not found for DOM check"))?;
+        let number = get_hex(number_pat);
+        compute_sha256_base64(&(number + 5).to_string())
     } else {
         return Err(HashError("unknown second client hash"));
     };
